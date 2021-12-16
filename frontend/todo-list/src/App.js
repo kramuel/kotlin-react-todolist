@@ -57,9 +57,9 @@ function App() {
         },
         body: JSON.stringify(updateTask),
       })
+        .then(setUpdate(update+1))
         .then((res) => res.json())
         .then((data) => console.log(data))
-        .then(setUpdate(update + 1));
     }
   };
 
@@ -67,8 +67,8 @@ function App() {
     fetch(url, {
       method: 'DELETE'
     })
-    .then((res) => res.json)
     .then(setUpdate(update+1))
+    .then((res) => res.json)
   };
 
   const addTask = (userInput) => {
@@ -85,9 +85,9 @@ function App() {
       },
       body: JSON.stringify(newTask),
     })
+      .then(setUpdate(update + 1))
       .then((res) => res.json())
       .then((data) => console.log(data))
-      .then(setUpdate(update + 1));
   };
 
   if (error) {
