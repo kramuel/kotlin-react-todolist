@@ -15,11 +15,23 @@ code {
     monospace;
 }
 
+
+
 .todo {
   cursor: pointer;
+  border: 2px solid #58af8b;
+  border-radius: 20px 20px;
+  margin: 5px auto 5px auto;
+
+  width:60%;
+}
+.todo:hover {
+  background-color: #d8f0e6;
 }
 .strike {
-  text-decoration: line-through;
+  text-decoration: line-through double rgb(255, 114, 114);
+  
+
 }
 
 input[type=text] {

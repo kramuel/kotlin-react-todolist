@@ -7,11 +7,9 @@ import ToDoForm from "./ToDoForm";
 // import useFetch from "./useFetch";
 
 function App() {
-  // const { data, isPending, error } = useFetch('http://localhost:8080/api/todos');
   const url = "http://localhost:8080/api/todos";
   const [update, setUpdate] = useState(0);
   const [toDoList, setToDoList] = useState([]);
-  // const [data, setData] = useState(null);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
 
@@ -37,25 +35,21 @@ function App() {
   }, [update]);
 
   const handleToggle = (selectedId) => {
-    const putUrl = url + "/" + { selectedId };
-    let oldTask = null;
+    const putUrl = url + "/" + (selectedId);
+
     let updateTask = null;
 
     toDoList.forEach((element) => {
-      if (element.id === selectedId) {
-        oldTask = element;
+      if (element.id == selectedId) {
+        updateTask = {
+          id: element.id,
+          task: element.task,
+          done: !element.done,
+        };
       }
     });
 
-    if (oldTask) {
-      updateTask = {
-        id: selectedId,
-        task: oldTask.task,
-        done: !oldTask.done,
-      };
-    
-      console.log(updateTask)
-
+    if (updateTask != null) {
       fetch(putUrl, {
         method: "PUT",
         headers: {
@@ -67,18 +61,14 @@ function App() {
         .then((data) => console.log(data))
         .then(setUpdate(update + 1));
     }
-
-    // let mapped = toDoList.map(task => {
-    //   return task.id === id ? { ...task, complete: !task.complete }: { ...task };
-    // });
-    // setToDoList(mapped);
   };
 
   const handleFilter = () => {
-    let filtered = toDoList.filter((task) => {
-      return !task.done;
-    });
-    setToDoList(filtered);
+    fetch(url, {
+      method: 'DELETE'
+    })
+    .then((res) => res.json)
+    .then(setUpdate(update+1))
   };
 
   const addTask = (userInput) => {
@@ -98,9 +88,6 @@ function App() {
       .then((res) => res.json())
       .then((data) => console.log(data))
       .then(setUpdate(update + 1));
-    // let copy = [...toDoList];
-    // copy = [...copy, { id: toDoList.length + 1, task: userInput, complete: false}];
-    // setToDoList(copy);
   };
 
   if (error) {

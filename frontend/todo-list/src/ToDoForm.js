@@ -9,7 +9,9 @@ const ToDoForm = ({ addTask }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        addTask(userInput);
+        if(userInput !== ""){
+            addTask(userInput);
+        }
         setUserInput("");
     }
     return (

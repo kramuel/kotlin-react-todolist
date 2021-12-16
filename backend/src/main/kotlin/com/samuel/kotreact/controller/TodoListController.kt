@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class TodoListController {
 
-    private val todoTasks = mutableListOf(
+    private var todoTasks = mutableListOf(
         TodoTask(1, "Köpa häst", false),
         TodoTask(2, "Finns det läsk", true),
         TodoTask(3, "Tomtebloss", false),
@@ -44,11 +44,15 @@ class TodoListController {
     fun updateTodoTaskById(@PathVariable id: Int,
                            @RequestBody incTodoTask: TodoTask) : TodoTask {
 
-        val taskToUpdate = todoTasks.firstOrNull {it.id == id }
-            ?.copy(id = incTodoTask.id, task = incTodoTask.task, done = incTodoTask.done)
+        var foundTask: TodoTask? = null
 
-        return taskToUpdate ?: throw TodoTaskNotFoundException()
-
+        todoTasks.forEachIndexed { index, todoTask ->
+            todoTask.takeIf { it.id == id }?.let {
+                todoTasks[index] = incTodoTask
+                foundTask = todoTasks[index]
+            }
+        }
+        return foundTask ?: throw TodoTaskNotFoundException()
     }
 
 
@@ -60,4 +64,10 @@ class TodoListController {
             throw TodoTaskNotFoundException()
     }
 
+    @DeleteMapping("/todos")
+    fun deleteDoneTodoTasks(): Unit {
+        if ( !todoTasks.removeIf { it.done } ) {
+            throw TodoTaskNotFoundException()
+        }
+    }
 }
